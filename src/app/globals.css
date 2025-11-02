@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.page-container {
+  @apply max-w-[1200px] mx-auto px-6;
+}
+
+.section {
+  @apply py-4;
+}
+
+.article-content img, .article-content video{
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  display: block;
+  margin: 0 auto;
+}
+.article-content pre{
+  white-space: pre-wrap;
+  word-break: break-all;
+  font-family: inherit;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.tweet-card pre{
+  word-break: break-all;
+}

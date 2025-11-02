@@ -1,0 +1,30 @@
+{
+  "name": "TwitterXDownload",
+  "version": "1.3.8",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@heroui/react": "^2.7.9",
+    "@heroui/theme": "^2.4.16",
+    "@remixicon/react": "^4.6.0",
+    "crypto-js": "^4.2.0",
+    "framer-motion": "^12.15.0",
+    "jszip": "^3.10.1",
+    "mongoose": "^8.15.1",
+    "next": "14.2.0",
+    "next-themes": "^0.4.6",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "remixicon": "^4.6.0"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.4",
+    "tailwindcss": "^3.4.17"
+  }
+}
