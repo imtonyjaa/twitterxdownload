@@ -10,6 +10,11 @@ import frLocales from '../locales/fr.json';
 import deLocales from '../locales/de.json';
 import thLocales from '../locales/th.json';
 import trLocales from '../locales/tr.json';
+import ruLocales from '../locales/ru.json';
+import viLocales from '../locales/vi.json';
+import hiLocales from '../locales/hi.json';
+import bnLocales from '../locales/bn.json';
+import urLocales from '../locales/ur.json';
 
 export const locales = {
   "en": {
@@ -24,25 +29,13 @@ export const locales = {
     name: "繁體中文",
     locales: hkLocales
   },
-  "ja": {
-    name: "日本語",
-    locales: jaLocales
-  },
-  "ko": {
-    name: "한국어",
-    locales: koLocales
+  "hi": {
+    name: "हिन्दी",
+    locales: hiLocales
   },
   "es": {
     name: "Español",
     locales: esLocales
-  },
-  "pt": {
-    name: "Português",
-    locales: ptLocales
-  },
-  "it": {
-    name: "Italiano",
-    locales: itLocales
   },
   "fr": {
     name: "Français",
@@ -51,6 +44,38 @@ export const locales = {
   "de": {
     name: "Deutsch",
     locales: deLocales
+  },
+  "bn": {
+    name: "বাংলা",
+    locales: bnLocales
+  },
+  "ru": {
+    name: "Русский",
+    locales: ruLocales
+  },
+  "pt": {
+    name: "Português",
+    locales: ptLocales
+  },
+  "ur": {
+    name: "اردو",
+    locales: urLocales
+  },
+  "ja": {
+    name: "日本語",
+    locales: jaLocales
+  },
+  "ko": {
+    name: "한국어",
+    locales: koLocales
+  },
+  "vi": {
+    name: "Tiếng Việt",
+    locales: viLocales
+  },
+  "it": {
+    name: "Italiano",
+    locales: itLocales
   },
   "th": {
     name: "ไทย",
@@ -81,6 +106,7 @@ export function autoTranslation(key,...args){
 export function getTranslation(locale, key,...args) {
   const localeData = getLocale(locale);
   
+  // 直接访问键，不再使用 split
   let result = localeData.locales[key];
   
   if (result === undefined) {
@@ -95,4 +121,3 @@ export function getTranslation(locale, key,...args) {
 
   return result;
 }
-

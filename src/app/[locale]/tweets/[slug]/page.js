@@ -4,6 +4,7 @@ import { parseTweetData } from "@/lib/parser";
 import ShareButtons from "@/app/components/ui/ShareButtons";
 import Explore from "@/app/components/ui/Explore";
 import { headers } from 'next/headers'
+import LazyVideo from "@/app/components/ui/LazyVideo";
 
 async function getTweetData(slug) {
     const headersList = await headers()
@@ -25,11 +26,12 @@ export async function generateMetadata({ params }) {
 
     const tweet_text = deleteAllUrl(tweet.tweet_text);
 
-    const title = tweet_text.substring(0, 50);
+    const title = tweet_text.substring(0, 40);
     const description = tweet_text.substring(0, 150);
 
     let image = "https://twitterxdownload.com/images/og.png";
-    
+    // 如果 tweet.tweet_media 存在,则使用 tweet.tweet_media 的第一个图片
+    // 获取推文数据
     const data = JSON.parse(tweet.tweet_data);
     let entries;
     for (const instruction of data.data.threaded_conversation_with_injections_v2.instructions) {
@@ -39,7 +41,7 @@ export async function generateMetadata({ params }) {
         }
     }
     const resultTweet = entries[0].content.itemContent.tweet_results.result;
-    
+    // 获取主推文数据
     const first_tweet = resultTweet.legacy || resultTweet.tweet.legacy;
     if (first_tweet.extended_entities?.media) {
         image = first_tweet.extended_entities.media[0].media_url_https;
@@ -48,9 +50,6 @@ export async function generateMetadata({ params }) {
     return {
       title: title,
       description: description,
-      alternates: {
-        canonical: `/tweets/${params.slug}`,
-      },
       openGraph: {
         title: title,
         description: description,
@@ -79,10 +78,12 @@ export default async function TweetDetail({params}) {
     const tweet = await getTweetData(slug);
 
     const linkConvert = (text) => {
+        // 替换链接
         text = text.replace(/https?:\/\/[^\s]+/g, (url) => {
             return `<a href="${url}" target="_blank" rel="noopener noreferrer" class="text-blue-500">${url}</a>`;
         });
         
+        // 替换 @用户名
         text = text.replace(/@(\w+)/g, (match, username) => {
             return `<a href="https://x.com/${username}" target="_blank" rel="noopener noreferrer" class="text-blue-500">${match}</a>`;
         });
@@ -103,6 +104,12 @@ export default async function TweetDetail({params}) {
         }
     });
 
+    const formatTime = (timestamp) => {
+        // 7:39 AM · Nov 4, 2025
+        const date = new Date(timestamp);
+        return date.toLocaleTimeString('en', { hour: '2-digit', minute: '2-digit' }) + ' · ' + date.toLocaleDateString('en', { month: 'short', day: 'numeric', year: 'numeric' });  
+    }
+
     const getHTML = () =>{
         
         return (
@@ -117,7 +124,7 @@ export default async function TweetDetail({params}) {
                                 if(media.type==="photo"){
                                     return <img key={'img-'+index} src={media.url} alt={media.alt} />
                                 }else if(media.type==="video"){
-                                    return <video key={'video-'+index} controls src={media.url} alt={media.alt} />
+                                    return <LazyVideo key={'video-'+index} src={media.url} className="max-w-full mt-4 mb-4 rounded-lg bg-black" />
                                 }
                             })
                         }
@@ -128,14 +135,14 @@ export default async function TweetDetail({params}) {
     }
 
     return (
-        <div className="page-container flex flex-row gap-6 p-4 mt-4 flex-wrap md:flex-nowrap w-full">
+        <div className="page-container flex flex-row gap-6 flex-wrap md:flex-nowrap w-full">
             <div className="flex flex-col flex-1 gap-4 box-border border-foreground/10 border-[1px] rounded-2xl p-8 bg-[#f8f8f8] dark:bg-foreground/5">
                 <div className="flex gap-4">
-                    <Link href={`/creators/${tweet.screen_name}`} target="_blank" className='w-full flex gap-4'>
-                        <div className="box-border flex-shrink-0 p-1">
+                    <Link href={`/creators/${tweet.screen_name}`} target="_blank" className='w-full flex gap-4 flex-row items-center'>
+                        <div className="box-border flex-shrink-0">
                             <Avatar disableAnimation isBordered src={tweet.profile_image||''} alt={`${tweet.name} avatar`} size="lg" radius="full"/>
                         </div>
-                        <div className="flex flex-col gap-1 pt-3 flex-1 overflow-hidden">
+                        <div className="flex flex-col gap-1 flex-1 overflow-hidden">
                             <h1 className="text-medium font-semibold leading-none text-default-600 overflow-hidden text-ellipsis whitespace-nowrap">{tweet.name}</h1>
                             <p className="text-small text-default-400 overflow-hidden text-ellipsis whitespace-nowrap">@{tweet.screen_name}</p>
                         </div>
@@ -147,7 +154,7 @@ export default async function TweetDetail({params}) {
                             </Button>
                         </Link>
                         <p className="text-small text-default-400">
-                            {new Date(tweet.post_at).toLocaleString()}
+                            {formatTime(tweet.post_at)}
                         </p>
                     </div>
                 </div>

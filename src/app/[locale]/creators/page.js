@@ -1,6 +1,33 @@
-import { Card, CardHeader, Avatar } from "@heroui/react";
-import Link from 'next/link';
+import { Link,Card, CardHeader, Avatar } from "@heroui/react";
 import { headers } from 'next/headers'
+import SiteConfig from '@/siteconfig.json';
+
+export async function generateMetadata({ params }) {
+    const title = 'Hot Twitter/X Creators';
+    const description = 'Discover the most popular Twitter/X creators and explore their content on TwitterXDownload.';
+    
+    return {
+      title: title,
+      description: description,
+      openGraph: {
+        title: title,
+        description: description,
+        type: 'website',
+        url: `https://${SiteConfig.domain}/`,
+        siteName: SiteConfig.title,
+        images: [{
+          url: `https://${SiteConfig.domain}/images/og.png`
+        }]
+      },
+      twitter: {
+        card: 'summary_large_image',
+        site: `@${SiteConfig.domain}`,
+        title: title,
+        description: description,
+        images: [`https://${SiteConfig.domain}/images/og.png`]
+      }
+    }
+}
 
 export default async function Creators({ params: { locale } }) {
 
@@ -19,7 +46,7 @@ export default async function Creators({ params: { locale } }) {
             {creators.map((creator) => (
                 <Card
                     as={Link}
-                    href={`https://x.com/${creator.screen_name}`}
+                    href={`/creators/${creator.screen_name}`}
                     title={`${creator.name} ${creator.screen_name}`}
                     target="_blank"
                     shadow="none"

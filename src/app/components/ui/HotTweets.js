@@ -52,7 +52,7 @@ export default function HotTweets({ locale = 'en' }) {
                 <Chip color="primary" size="sm" variant="flat" className="ml-2 mt-1">{totalCount}</Chip>
                 <div className="ml-auto">
                     <Button color="primary" size="sm" variant="light" as={Link} href="/tweets">
-                        {t('Search')}
+                        {t('Search Tweets')}
                     </Button>
                 </div>
             </div>

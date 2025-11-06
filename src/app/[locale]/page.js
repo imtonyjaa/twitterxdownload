@@ -5,6 +5,7 @@ import HotCreators from '@/app/components/ui/HotCreators';
 import Hero from '@/app/components/ui/Hero';
 import { redirect } from 'next/navigation';
 import { headers } from 'next/headers'
+import MoreFeatures from '../components/ui/MoreFeatures';
 
 export default async function Home({ params: { locale } }) {
   const t = function (key) {
@@ -31,20 +32,12 @@ export default async function Home({ params: { locale } }) {
             redirect(`/downloader?url=${url}`);
           }} />
         </div>
-        {process.env.NEXT_PUBLIC_USE_HOT_CREATORS != 0 && (
-        <>
-          <div className="section">
-            <HotCreators locale={locale} />
-          </div>
-        </>
-        )}
-        {process.env.NEXT_PUBLIC_USE_HOT_TWEETS != 0 && (
-        <>
-          <div className="section">
-            <HotTweets locale={locale} />
-          </div>
-        </>
-        )}
+        <div className="section">
+          <HotCreators locale={locale} />
+        </div>
+        <div className="section">
+          <HotTweets locale={locale} />
+        </div>
         <div className="section">
           <h3 className="text-2xl font-bold px-2 py-4">{t('Download Twitter video and all content')}</h3>
           <div className="px-2">
@@ -56,6 +49,10 @@ export default async function Home({ params: { locale } }) {
         <div className="section">
           <h3 className="text-2xl font-bold px-2 py-4">{t('Frequently Asked Questions')}</h3>
           <FAQ locale={locale} />
+        </div>
+        <div className="section">
+          <h3 className="text-2xl font-bold px-2 py-4">{t('More Features')}</h3>
+          <MoreFeatures locale={locale} />
         </div>
       </div>
     </>

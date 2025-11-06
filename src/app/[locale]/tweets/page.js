@@ -35,11 +35,18 @@ export default function Tweets({ params: { locale } }) {
         { key: "quarter", label: t('Quarter') }
     ];
 
+    const sortTypes = [
+        { key: "desc", label: t('New-Old') },
+        { key: "asc", label: t('Old-New') },
+        { key: "random", label: t('Random') }
+    ];
+
     const [name, setName] = useState(initialParams.name || '');
     const [screen_name, setScreenName] = useState(initialParams.screen_name || '');
     const [text, setText] = useState(initialParams.text || '');
     const [content_type, setContentType] = useState('all');
     const [date_range, setDateRange] = useState('all');
+    const [sort_type, setSortType] = useState('desc');
     const [loading, setLoading] = useState(false);
     const [lastCursor, setLastCursor] = useState(null);
     const [tweets, setTweets] = useState([[], [], []]);
@@ -86,6 +93,7 @@ export default function Tweets({ params: { locale } }) {
 
         params.set('content_type',content_type);
         params.set('date_range',date_range);
+        params.set('sort_type',sort_type);
 
         const response = await fetch(`/api/requestdb?${params.toString()}`);
         const data = await response.json();
@@ -109,12 +117,15 @@ export default function Tweets({ params: { locale } }) {
             let currentIndex = nextIndex;
     
             if (cursor) {
-                targetTweets = prevTweets.map(row => [...row]);
+                // 加载更多：基于现有数据
+                targetTweets = prevTweets.map(row => [...row]); // 深拷贝现有数据
             } else {
-                targetTweets = prevTweets.map(() => []);
+                // 新搜索：但不创建全新数组，而是清空现有数组
+                targetTweets = prevTweets.map(() => []); // 清空但保持数组引用
                 currentIndex = 0;
             }
             
+            // 添加新数据，均匀的分配到三个数组中
             data.data.forEach((tweet) => {
                 targetTweets[currentIndex].push({
                     ...tweet,
@@ -137,6 +148,8 @@ export default function Tweets({ params: { locale } }) {
         setName('');
         setScreenName('');
         setText('');
+        setContentType('all');
+        setSortType('desc');
         setTweets([[], [], []]);
         setLastCursor(null);
     }
@@ -149,6 +162,7 @@ export default function Tweets({ params: { locale } }) {
                 </div>
 
                 <div className="flex w-full gap-4 flex-wrap md:flex-nowrap">
+                    {/* 用户名搜索 */}
                     <Input
                         disabled={loading}
                         label="Name"
@@ -165,6 +179,7 @@ export default function Tweets({ params: { locale } }) {
                         }}
                     />
 
+                    {/* 用户昵称搜索 */}
                     <Input
                         disabled={loading}
                         label="Screen Name"
@@ -181,6 +196,7 @@ export default function Tweets({ params: { locale } }) {
                         }}
                     />
 
+                    {/* 推文内容搜索 */}
                     <Input
                         disabled={loading}
                         label="Text"
@@ -225,13 +241,13 @@ export default function Tweets({ params: { locale } }) {
                 <h3 className="text-lg font-semibold mb-4 flex justify-between items-center">
                     <div className='flex items-center gap-2'>{t('Search Results')}{loading && <Spinner className="ml-2" size="sm" color="primary" variant="simple"/>}</div>
                     <div className='flex gap-4 flex-shrink-0'>
-                        
+                        {/* 内容类型过滤 */}
                         <div className='w-1/2 min-w-[110px]'>
                             <Select
                                 disabled={loading}
                                 label={t('Content Type')}
                                 variant="underlined"
-                                defaultSelectedKeys={["all"]}
+                                selectedKeys={[content_type]}
                                 value={content_type}
                                 onChange={(e) => {
                                     setContentType(e.target.value);
@@ -246,21 +262,22 @@ export default function Tweets({ params: { locale } }) {
                             </Select>
                         </div>
 
+                        {/* 时间范围过滤 */}
                         <div className='w-1/2 min-w-[110px]'>
                             <Select
                                 disabled={loading}
-                                label={t('Post At')}
+                                label={t('Sort Type')}
                                 variant="underlined"
-                                defaultSelectedKeys={["all"]}
-                                value={date_range}
+                                selectedKeys={[sort_type]}
+                                value={sort_type}
                                 onChange={(e) => {
-                                    setDateRange(e.target.value);
+                                    setSortType(e.target.value);
                                     setShouldSearch(true);
                                 }}
                             >
-                                {dateRanges.map((range) => (
-                                    <SelectItem key={range.key} value={range.key}>
-                                        {range.label}
+                                {sortTypes.map((sort) => (
+                                    <SelectItem key={sort.key} value={sort.key}>
+                                        {sort.label}
                                     </SelectItem>
                                 ))}
                             </Select>
