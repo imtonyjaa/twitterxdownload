@@ -14,28 +14,22 @@ export default function MyFooter({ locale = 'en' }) {
     const pathname = usePathname();
     
     const convertLocaleLink = (key) => {
-        // 如果选择的语言和当前语言相同，返回当前路径
         if (key === locale) {
             return pathname;
         }
 
-        // 检查当前路径是否已经包含语言代码
         const hasLocale = Object.keys(locales).some(loc => pathname.startsWith(`/${loc}`));
 
-        // 获取当前URL的查询参数
         const searchParams = useSearchParams();
         const queryString = searchParams.toString();
         
         let newPath;
         if (hasLocale) {
-            // 如果已有语言代码，替换它
             newPath = pathname.replace(/^\/[^/]+/, `/${key}`);
         } else {
-            // 如果没有语言代码，添加新的语言代码
             newPath = `/${key}${pathname}`;
         }
         
-        // 添加查询参数（如果有）
         return `${newPath}${queryString ? `?${queryString}` : ''}`;
     }
     return (

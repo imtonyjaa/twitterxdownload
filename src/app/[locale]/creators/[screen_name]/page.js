@@ -58,7 +58,6 @@ function getCreatorBio(creator) {
             }
         }
 
-        // 获取推文数据
         const resultTweet = data_entries[0].content.itemContent.tweet_results.result;
 
         const user = resultTweet.core?.user_results?.result?.legacy || resultTweet.tweet.core?.user_results?.result?.legacy;

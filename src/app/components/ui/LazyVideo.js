@@ -13,12 +13,12 @@ export default function LazyVideo({ src, poster, ...rest }) {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setReady(true);            // 触发渲染真实 source
-          node.load();               // 加载资源
-          observer.disconnect();     // 一次就够了
+          setReady(true);            
+          node.load();               
+          observer.disconnect();     
         }
       },
-      { threshold: 0.25 }            // 25% 进入视口时触发
+      { threshold: 0.25 }            
     );
 
     observer.observe(node);

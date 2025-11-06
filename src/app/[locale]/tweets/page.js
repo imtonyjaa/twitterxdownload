@@ -117,15 +117,12 @@ export default function Tweets({ params: { locale } }) {
             let currentIndex = nextIndex;
     
             if (cursor) {
-                // 加载更多：基于现有数据
-                targetTweets = prevTweets.map(row => [...row]); // 深拷贝现有数据
+                targetTweets = prevTweets.map(row => [...row]);
             } else {
-                // 新搜索：但不创建全新数组，而是清空现有数组
-                targetTweets = prevTweets.map(() => []); // 清空但保持数组引用
+                targetTweets = prevTweets.map(() => []);
                 currentIndex = 0;
             }
             
-            // 添加新数据，均匀的分配到三个数组中
             data.data.forEach((tweet) => {
                 targetTweets[currentIndex].push({
                     ...tweet,

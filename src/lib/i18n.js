@@ -106,7 +106,6 @@ export function autoTranslation(key,...args){
 export function getTranslation(locale, key,...args) {
   const localeData = getLocale(locale);
   
-  // 直接访问键，不再使用 split
   let result = localeData.locales[key];
   
   if (result === undefined) {

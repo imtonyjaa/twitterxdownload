@@ -30,8 +30,6 @@ export async function generateMetadata({ params }) {
     const description = tweet_text.substring(0, 150);
 
     let image = "https://twitterxdownload.com/images/og.png";
-    // 如果 tweet.tweet_media 存在,则使用 tweet.tweet_media 的第一个图片
-    // 获取推文数据
     const data = JSON.parse(tweet.tweet_data);
     let entries;
     for (const instruction of data.data.threaded_conversation_with_injections_v2.instructions) {
@@ -41,7 +39,7 @@ export async function generateMetadata({ params }) {
         }
     }
     const resultTweet = entries[0].content.itemContent.tweet_results.result;
-    // 获取主推文数据
+    
     const first_tweet = resultTweet.legacy || resultTweet.tweet.legacy;
     if (first_tweet.extended_entities?.media) {
         image = first_tweet.extended_entities.media[0].media_url_https;
@@ -78,12 +76,10 @@ export default async function TweetDetail({params}) {
     const tweet = await getTweetData(slug);
 
     const linkConvert = (text) => {
-        // 替换链接
         text = text.replace(/https?:\/\/[^\s]+/g, (url) => {
             return `<a href="${url}" target="_blank" rel="noopener noreferrer" class="text-blue-500">${url}</a>`;
         });
         
-        // 替换 @用户名
         text = text.replace(/@(\w+)/g, (match, username) => {
             return `<a href="https://x.com/${username}" target="_blank" rel="noopener noreferrer" class="text-blue-500">${match}</a>`;
         });
